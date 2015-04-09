@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+	<robot name="robot_cursor">
+
+		<!-- tige centrale -->
+		<link name="base_link">
+			<visual>
+				<geometry>
+					<cylinder length="0.3" radius="0.01"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+				<material name="Blue">
+					<color rgba="0.0 0.0 0.8 1.0"/>
+				</material>
+			</visual>
+			<collision>
+				<origin rpy="1.5707 0 0" xyz="0 0 0"/>
+				<geometry>
+					<cylinder length="0.3" radius="0.055"/>
+				</geometry>
+			</collision>
+		</link>
+
+		<link name="up_1">
+			<visual>
+				<geometry>
+					<cylinder length="0.1" radius="0.01"/>
+				</geometry>
+				<origin rpy="0 2.3562 0.7854" xyz="0.025355 0.025355 -0.035355"/>
+				<material name="Green">
+					<color rgba="0.0 0.8 0.0 1.0"/>
+				</material>
+			</visual>
+	 </link>
+
+   <joint name="base_to_up" type="fixed">
+       <parent link="base_link"/>
+       <child link="up_1"/>
+       <origin xyz="0 0 0.15"/>
+   </joint>
+
+		<link name="up_2">
+			<visual>
+				<geometry>
+					<cylinder length="0.11" radius="0.01"/>
+				</geometry>
+				<origin rpy="0 0.7854 0" xyz="-0.035355 0 -0.035355"/>
+				<material name="Green">
+					<color rgba="0.0 0.8 0.0 1.0"/>
+				</material>
+			</visual>
+		</link>			
+
+		<joint name="up_coude" type="fixed">
+       <parent link="up_1"/>
+       <child link="up_2"/>
+       <origin xyz="0.05 0.05 -0.07071"/>
+   	</joint>
+
+		<link name="down_1">
+			<visual>
+				<geometry>
+					<cylinder length="0.1" radius="0.01"/>
+				</geometry>
+				<origin rpy="0 0.7854 0.7854" xyz="-0.025355 -0.025355 -0.035355"/>
+				<material name="Red">
+					<color rgba="0.8 0.0 0.0 1.0"/>
+				</material>
+			</visual>
+	 </link>
+
+   <joint name="base_to_down" type="fixed">
+       <parent link="base_link"/>
+       <child link="down_1"/>
+       <origin xyz="0 0 0.15"/>
+   </joint>
+
+		<link name="down_2">
+			<visual>
+				<geometry>
+					<cylinder length="0.11" radius="0.01"/>
+				</geometry>
+				<origin rpy="0 2.3562 0" xyz="0.035355 0 -0.035355"/>
+				<material name="Red">
+					<color rgba="0.8 0.0 0.0 1.0"/>
+				</material>
+			</visual>
+		</link>			
+
+		<joint name="down_coude" type="fixed">
+       <parent link="down_1"/>
+       <child link="down_2"/>
+       <origin xyz="-0.05 -0.05 -0.07071"/>
+   	</joint>
+
+
+	</robot>
+
+
+
+
+
