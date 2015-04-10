@@ -32,12 +32,13 @@ ps.addGoalConfig (q_goal)
 ps.selectPathPlanner("rrtPerso")
 print("Debut motion planning")
 
-tps1 = time.clock()
-ps.solve ()
-tps2 = time.clock()
-print(tps2-tps1)
 
-display.displayRoadmap(ps,v)
+v.solveAndDisplay(white,0.02,1,brown)
+
+ps.solve ()
+
+v.displayRoadmap(white,0.02,1,brown)
+
 
 pp = PathPlayer (robot.client, v)
 #print("affichage solution")

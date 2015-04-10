@@ -26,26 +26,7 @@ namespace hpp {
             ptr->init (shPtr);            
             return shPtr;
         }
-        /* // Retrieve the robot the problem has been defined for.
-    model::DevicePtr_t robot (problem ().robot ());
-    // Retrieve the path validation algorithm associated to the problem
-    core::PathValidationPtr_t pathValidation (problem ().pathValidation ());
-    // Retrieve configuration validation methods associated to the problem
-    core::ConfigValidationsPtr_t configValidations
-      (problem ().configValidations ());
-    // Retrieve the steering method
-    core::SteeringMethodPtr_t sm (problem ().steeringMethod ());
-    // Retrieve the constraints the robot is subject to
-    core::ConstraintSetPtr_t constraints (problem ().constraints ());
-    // Retrieve roadmap of the path planner
-    core::RoadmapPtr_t r (roadmap ());
-    // shoot a valid random configuration
-    core::ConfigurationPtr_t qrand;
 
-    do {
-        qrand = shooter_.shoot ();
-    } while (!configValidations->validate (*qrand));
-*/
 
 
         /// une itération de l'algo
@@ -57,37 +38,39 @@ namespace hpp {
             core::RoadmapPtr_t T = roadmap();
             core::PathValidationPtr_t pathValidation (problem ().pathValidation ());
             core::PathPtr_t validPart;
+            core::ConnectedComponentPtr_t cc1,cc2;
+            if(connectGoal){
+                cc1= T->goalNodes().front()->connectedComponent();
+                cc2=T->initNode()->connectedComponent();
+                connectGoal = false;
+            }else{
+                cc2= T->goalNodes().front()->connectedComponent();
+                cc1=T->initNode()->connectedComponent();
+                connectGoal = true;
+            }
+
 
             // tire une configuration random sans collision
             do {
                 qrand = shooter_.shoot ();
             } while (!configValidations->validate (*qrand));
-
-
-            //extend : genere qnew le plus proche possible de qrand, si possible
-            core::NodePtr_t xnew = extend(qrand);
-            core::ConfigurationPtr_t qnew = xnew->configuration();
-
-           if(xnew){
+           //extend : genere qnew le plus proche possible de qrand, si possible
+           core::NodePtr_t xnew = extend(qrand,cc1);    // extend avec le premier arbre
+           if(xnew){    // si on a pu etendre une branche
                 // ---- tente de connecter à qgoal:
                 core::ConfigurationPtr_t qnew = xnew->configuration();
-                core::NodePtr_t xgoal = T->goalNodes().front();
-
-                //core::ConfigurationPtr_t qgoal = problem().goalConfigs().front();   //(on considère que des pb à 1 but
-                core::ConfigurationPtr_t qgoal = xgoal->configuration();
-                core::PathPtr_t localPath = (*sm)(*qnew,*qgoal);
-                if(pathValidation->validate (localPath, false, validPart)){ // si chemin valide, on connect
-                    hppDout(notice,"qgoal add");
-                    T->addEdge (xnew, xgoal, localPath);
-                    T->addEdge (xgoal, xnew, localPath->reverse ());
-                }
+                core::NodePtr_t xnew2 = extend(qnew,cc2); // tente de relier la nouvelle node a l'autre arbre
             }
 
 
         }
 
 
-        core::NodePtr_t RrtConnect::extend(core::ConfigurationPtr_t qrand)
+        /**
+          RRT extend : cherche le configuration libre la plus proche de qrand, selon une droite entre qnear et qrand et la retourne
+          retourne null si il n'en trouve pas
+          */
+        core::NodePtr_t RrtConnect::extend(core::ConfigurationPtr_t qrand,core::ConnectedComponentPtr_t cc)
         {
             double d;
             core::SteeringMethodPtr_t sm (problem ().steeringMethod ());
@@ -97,7 +80,7 @@ namespace hpp {
             core::RoadmapPtr_t T = roadmap();
             problem().distance();
             // recherche noeud le plus proche dans l'arbre lié à qinit
-            core::NodePtr_t xnear= T->nearestNode(qrand,T->initNode()->connectedComponent(),d);
+            core::NodePtr_t xnear= T->nearestNode(qrand,cc,d);
 
             core::ConfigurationPtr_t qnear = xnear->configuration();
             hppDout(notice,"qnear"<<*qnear<<std::endl);
@@ -120,15 +103,14 @@ namespace hpp {
                 T->addEdge (xnew, xnear, validPart->reverse ());
                 return xnew;
             }else
-                return xnear;
+                return 0;
         }
 
         /// constructeur ( en protected )
         RrtConnect::RrtConnect(const core::Problem& problem, const core::RoadmapPtr_t& roadmap) :
                 core::PathPlanner (problem, roadmap), shooter_ (problem.robot ())
         {
-           /* core::DistancePtr_t distance (core::WeighedDistance::create (problem.robot()));
-            problem.distance(distance);*/
+           connectGoal = false; // change de status à chaque itération, défini si on link en premier le goal ou l'init.
         }
 
 

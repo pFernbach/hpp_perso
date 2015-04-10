@@ -25,7 +25,8 @@ namespace hpp {
                 core::BasicConfigurationShooter shooter_;
                 /// weak pointer to itself
                 RrtConnectWkPtr_t weakPtr_;
-                core::NodePtr_t extend(core::ConfigurationPtr_t qrand);
+                core::NodePtr_t extend(core::ConfigurationPtr_t qrand, core::ConnectedComponentPtr_t cc);
+                bool connectGoal;
         };
 
 

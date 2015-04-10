@@ -28,11 +28,11 @@ q_goal [0:3] = [0,1.5,0.5]
 #v (q_goal)
 
 print("chargement map")
-v.loadObstacleModel ("iai_maps", "labyrinth", "labyrinth")
+v.loadObstacleModel ("iai_maps", "labyrinth2", "labyrinth2")
 
 ps.setInitialConfig (q_init)
 ps.addGoalConfig (q_goal)
-ps.selectPathPlanner("rrtPerso")
+ps.selectPathPlanner("rrtConnect")
 
 v.solveAndDisplay(white,0.02,1,brown)
 
