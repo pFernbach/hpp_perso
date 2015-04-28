@@ -19,7 +19,7 @@ int main (int argc, const char* argv[])
   problemSolver->addPathPlannerType("rrtConnect",hpp::perso::RrtConnect::create);
   // problemSolver->addPathPlannerType ("testPierre", hpp::core::DiffusingPlanner::createWithRoadmap);
   // Create the CORBA server.
-  hpp::corbaServer::Server server (problemSolver, argc, argv, false);    // par défaut : true
+  hpp::corbaServer::Server server (problemSolver, argc, argv, false);    // par défaut : true (multi thread)
   // Start the CORBA server.
   server.startCorbaServer ();
   // Wait for CORBA requests.

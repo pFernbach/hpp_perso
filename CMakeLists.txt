@@ -77,6 +77,7 @@ install(FILES
 	urdf/robot_cursor.urdf
 	urdf/robot_r2d2.urdf
   urdf/box.urdf
+  urdf/ur5_robot.urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
   )
 install(FILES
@@ -85,6 +86,7 @@ install(FILES
 	srdf/robot_cursor.srdf
 	srdf/robot_r2d2.srdf
   srdf/box.srdf
+  srdf/ur5_robot.srdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/srdf
   )
 install (FILES
@@ -108,8 +110,10 @@ install (FILES
   DESTINATION ${PYTHON_SITELIB}/hpp/corbaserver/cursor)
 
 install (FILES
-	src/hpp/display.py
-	DESTINATION ${PYTHON_SITELIB}/hpp)
+  src/hpp/corbaserver/ur5/ur5_robot.py
+  src/hpp/corbaserver/ur5/__init__.py
+  DESTINATION ${PYTHON_SITELIB}/hpp/corbaserver/ur5)
+
 
 # Installation for documentation
 #install(FILES

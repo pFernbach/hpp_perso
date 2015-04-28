@@ -1,23 +1,23 @@
 from hpp.corbaserver import * 
 from hpp.corbaserver.stick import Robot
+from hpp.corbaserver import Viewer
+from hpp.corbaserver import ProblemSolver
+from hpp.gepetto import PathPlayer
 import time  
+
+
 white=[1.0,1.0,1.0,1.0]
 green=[0.23,0.75,0.2,0.5]
 yellow=[0.85,0.75,0.15,0.5]
 
-print("chargement robot")
-robot = Robot ('robot_stick', True)
+robot = Robot ('robot_Stick')
+robot.tf_root = 'base_link'
 robot.setJointBounds ("base_joint_xyz", [-10,10,-10,10, 0.5, 0.5])	
 #robot.setJointBounds ("base_joint_xyz", [-5,4,-7,5,0.5,0.5])
-robot.tf_root = 'base_link'
 
-
-from hpp.corbaserver import ProblemSolver
 ps = ProblemSolver (robot)
-
-from hpp.gepetto import Viewer
 v = Viewer (ps)
-
+pp = PathPlayer (robot.client, v)
 
 q_init = robot.getCurrentConfig ()
 
@@ -27,22 +27,19 @@ q_goal = q_init [::]
 q_goal [0:3] = [-2.5, -3.5, 0.5]
 #v (q_goal)
 
-print("chargement map")
+
 v.loadObstacleModel ("iai_maps", "room", "room")
 
 ps.setInitialConfig (q_init)
 ps.addGoalConfig (q_goal)
-
-ps.selectPathPlanner("rrtPerso")
-print("Debut motion planning")
-
 ps.solve ()
 
 
-v.displayRoadmap(white,0.02,1,yellow)
 
-from hpp.gepetto import PathPlayer
-pp = PathPlayer (robot.client, v)
+v.displayRoadmap("rm1",white,0.02,1,yellow)
+
+
+v.solveAndDisplay("rm1",10,white,0.02,1,yellow)
 #print("affichage solution")
 #pp (0)
 print("affichage solution optimise")

@@ -1,4 +1,5 @@
-from hpp.corbaserver.pr2 import Robot
+from hpp.corbaserver import * 
+from hpp.corbaserver.ur5 import Robot
 from hpp.corbaserver import ProblemSolver
 from hpp.gepetto import Viewer
 from hpp.gepetto import PathPlayer
@@ -11,27 +12,39 @@ blue = [0.0, 0.0, 0.8, 1.0]
 grey = [0.7,0.7,0.7,1.0]
 red = [0.8,0.0,0.0,1.0]
 
-robot = Robot ('pr2')
-robot.setJointBounds ("base_joint_xy", [-4, -3, -5, -3])
+robot = Robot ('robot_ur5')
+robot.setJointBounds ("base_joint_xyz", [-5,-2.5,-6,-3,0.75,0.75])
 ps = ProblemSolver (robot)
 v = Viewer (ps)
 
 q_init = robot.getCurrentConfig ()
 q_goal = q_init [::]
-q_init [0:2] = [-3.2, -4]
-rank = robot.rankInConfiguration ['torso_lift_joint']
-q_init [rank] = 0.2
+q_init [0:3] = [-2.971,-3.796,0.75]
+rank = robot.rankInConfiguration ['shoulder_lift_joint']
+q_init [rank] = -0.739
+rank = robot.rankInConfiguration ['elbow_joint']
+q_init [rank] = 1.635
+rank = robot.rankInConfiguration ['wrist_1_joint']
+q_init [rank] = 3.809
+rank = robot.rankInConfiguration ['wrist_2_joint']
+q_init [rank] = -1.65
+rank = robot.rankInConfiguration ['wrist_3_joint']
+q_init [rank] = 0.874
 v (q_init)
 
-q_goal [0:2] = [-3.2, -4]
-rank = robot.rankInConfiguration ['l_shoulder_lift_joint']
-q_goal [rank] = 0.5
-rank = robot.rankInConfiguration ['l_elbow_flex_joint']
-q_goal [rank] = -0.5
-rank = robot.rankInConfiguration ['r_shoulder_lift_joint']
-q_goal [rank] = 0.5
-rank = robot.rankInConfiguration ['r_elbow_flex_joint']
-q_goal [rank] = -0.5
+q_goal [0:3] = [-4.515,-5.244,0.75]
+rank = robot.rankInConfiguration ['shoulder_pan_joint']
+q_goal [rank] = 3.456
+rank = robot.rankInConfiguration ['shoulder_lift_joint']
+q_goal [rank] = -0.776
+rank = robot.rankInConfiguration ['elbow_joint']
+q_goal [rank] = 0.66
+rank = robot.rankInConfiguration ['wrist_1_joint']
+q_goal [rank] = -2.963
+rank = robot.rankInConfiguration ['wrist_2_joint']
+q_goal [rank] = -0.266
+rank = robot.rankInConfiguration ['wrist_3_joint']
+q_goal [rank] =0
 #r (q_goal)
 
 v.loadObstacleModel ("iai_maps", "kitchen_area", "kitchen")

@@ -34,11 +34,16 @@ ps.setInitialConfig (q_init)
 ps.addGoalConfig (q_goal)
 ps.selectPathPlanner("rrtConnect")
 
-v.solveAndDisplay(white,0.02,1,brown)
+v.solveAndDisplay("rm1",50,white,0.02,1,brown)
 
 ps.solve ()
 
-v.displayRoadmap(white,0.02,1,brown)
+
+v.displayRoadmap("rm1",white,0.02,1,brown)
+
+
+v.client.gui.removeFromGroup("rm1",v.sceneName)
+
 
 
 pp = PathPlayer (robot.client, v)
